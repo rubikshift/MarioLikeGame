@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Image Include="eti.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="cs8x8.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="spritesheet.bmp">
+      <Filter>resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{bc4c3baf-3cbc-4343-b126-ce3f19a24fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{e86bf010-3a38-4336-87d8-46f453f333cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{de895b3d-db67-4ecd-8103-5bee49bf7341}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="mario.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="point.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="tile.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="basicSDLFunctions.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sdl.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="mario.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="velocity.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="tile.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="point.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="basicSDLFunctions.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
