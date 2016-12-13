@@ -114,8 +114,49 @@ void mario::render(SDL_Renderer* renderer)
 	SDL_Rect sprite;
 	sprite.x = this->position.x;
 	sprite.y = this->position.y;
-	sprite.w = this->animationFrames[actualFrame].w;
-	sprite.h = this->animationFrames[actualFrame].h;
+	sprite.w = this->animationFrames[actualFrame].w * 2;
+	sprite.h = this->animationFrames[actualFrame].h * 2;
 
 	SDL_RenderCopy(renderer, this->spriteSheet, &(this->animationFrames[this->actualFrame]), &sprite);
 }
+
+point mario::getPosition()
+{ return this->position; }
+
+bool mario::checkEnemyCollisions(enemy** enemies, int count)
+{
+	point enemyPosition;
+	for (int i = 0; i < count; i++)
+	{
+		enemyPosition = enemies[i]->getPosition();
+		if (this->position.x >= enemyPosition.x && this->position.x <= (enemyPosition.x + enemies[i]->getWidth())
+			|| (this->position.x + this->getWidth()) >= enemyPosition.x && (this->position.x + this->getWidth()) <= (enemyPosition.x + enemies[i]->getWidth()))
+			if ((this->position.y + this->getHeight()) >= enemyPosition.y && (this->position.y + this->getHeight()) <= (enemyPosition.y + enemies[i]->getHeight()))
+				return true;
+	}
+	return false;
+}
+
+collision mario::checkTileCollisions(tile** tiles, int count)
+{
+	point tilePosition;
+	for (int i = 0; i < count; i++)
+	{
+		tilePosition = tiles[i]->getPosition();
+		if (this->position.x >= tilePosition.x && this->position.x <= (tilePosition.x + tiles[i]->getWidth())
+			|| (this->position.x + this->getWidth()) >= tilePosition.x && (this->position.x + this->getWidth()) <= (tilePosition.x + tiles[i]->getWidth()))
+		{
+			if ((this->position.y + this->getHeight()) >= tilePosition.y && (this->position.y + this->getHeight()) <= (tilePosition.y + tiles[i]->getHeight()))
+				return ground;
+			else if (this->position.y >= tilePosition.y && this->position.y <= (tilePosition.y + tiles[i]->getHeight()))
+				return platform;
+		}
+	}
+	return none;
+}
+
+int mario::getWidth()
+{ return this->animationFrames[this->actualFrame].w * 2; }
+
+int mario::getHeight()
+{ return this->animationFrames[this->actualFrame].h * 2; }

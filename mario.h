@@ -2,11 +2,15 @@
 #include "sdl.h"
 #include "velocity.h"
 #include "point.h"
+#include "collision.h"
+#include "tile.h"
+#include "enemy.h"
+
 enum marioInfo
 {
 	animationFramesCount = 10,
 	numberOfLives = 3,
-	moveSpeed = 40, //pixel per second
+	moveSpeed = 80, //pixel per second
 	moveRightStartFrame = 0,
 	moveRightEndFrame = 3,
 	moveLeftStartFrame = 4,
@@ -39,5 +43,9 @@ class mario
 		void stop();
 		void update(double timeElapsed);
 		void render(SDL_Renderer* renderer);
-		//bool checkCollisions();
+		point getPosition();
+		collision checkTileCollisions(tile** tiles, int count);
+		bool checkEnemyCollisions(enemy** enemies, int count);
+		int getWidth();
+		int getHeight();
 };

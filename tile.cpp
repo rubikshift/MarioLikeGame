@@ -21,3 +21,12 @@ void tile::render(SDL_Renderer* renderer)
 	sprite.h = this->rect.h;
 	SDL_RenderCopy(renderer, this->texture, &(this->rect), &sprite);
 }
+
+int tile::getWidth()
+{ return this->rect.w; }
+
+int tile::getHeight()
+{ return this->rect.h; }
+
+point tile::getPosition()
+{ return this->position; }

@@ -24,4 +24,7 @@ class enemy
 		~enemy();
 		void update(double timeElapsed);
 		void render(SDL_Renderer* renderer);
+		point getPosition();
+		int getWidth();
+		int getHeight();
 };

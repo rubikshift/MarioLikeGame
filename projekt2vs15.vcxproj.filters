@@ -64,5 +64,8 @@
     <ClInclude Include="basicSDLFunctions.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="collision.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

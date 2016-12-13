@@ -112,6 +112,7 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
     <Image Include="spritesheet.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="collision.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="mario.h" />
     <ClInclude Include="point.h" />

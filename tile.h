@@ -13,4 +13,7 @@ class tile
 		tile(char* textureFile, int textureWidth, int textureHeight, point position, SDL_Renderer* renderer);
 		~tile();
 		void render(SDL_Renderer* renderer);
+		int getWidth();
+		int getHeight();
+		point getPosition();
 };

@@ -45,3 +45,12 @@ void enemy::render(SDL_Renderer* renderer)
 
 	SDL_RenderCopy(renderer, this->spriteSheet, &(this->animationFrames[this->actualFrame]), &sprite);
 }
+
+point enemy::getPosition()
+{ return this->position; }
+
+int enemy::getWidth()
+{ return this->animationFrames[this->actualFrame].w; }
+
+int enemy::getHeight()
+{ return this->animationFrames[this->actualFrame].h; }

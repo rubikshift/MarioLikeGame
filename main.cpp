@@ -87,6 +87,11 @@ int main(int argc, char **argv)
 		DrawString(screen, 10, 10, text, charset);
 		sprintf(text, "Esc - wyjscie, n - nowa gra, l - wczytaj gre, s - zapisz gre");
 		DrawString(screen, 10, 26, text, charset);
+		if (player->checkEnemyCollisions(&newEnemy, 1))
+		{
+			sprintf(text, "kolizja!!!!!!");
+			DrawString(screen, 10, 40, text, charset);
+		}
 
 		SDL_UpdateTexture(scrtex, NULL, screen->pixels, screen->pitch);
 		SDL_RenderClear(renderer);
@@ -128,6 +133,8 @@ int main(int argc, char **argv)
 	SDL_DestroyTexture(scrtex);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	delete player;
+	delete newEnemy;
 
 	SDL_Quit();
 	return 0;
