@@ -1,14 +1,15 @@
 #include "mario.h"
 #include "basicSDLFunctions.h"
 
-mario::mario(char* spriteSheetFile, int spriteWidth, int spriteHeight, point start, SDL_Renderer* renderer)
+mario::mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, point start, SDL_Renderer* renderer)
 {
 	this->position = start;
 	this->coins = 0;
 	this->lives = (int)numberOfLives;
 	this->isJumping = false;
+	this->isFalling = false;
 	this->actualFrame = 0;
-	this->spriteSheet = LoadTexture(spriteSheetFile, renderer);
+	this->spriteSheet = loadedSpriteSheet;
 	for (int i = 0; i < (int)animationFramesCount; i++)
 	{
 		animationFrames[i].x = i*spriteWidth;
@@ -16,11 +17,6 @@ mario::mario(char* spriteSheetFile, int spriteWidth, int spriteHeight, point sta
 		animationFrames[i].w = spriteWidth;
 		animationFrames[i].h = spriteHeight;
 	}
-}
-
-mario::~mario()
-{
-	SDL_DestroyTexture(this->spriteSheet);
 }
 
 void mario::moveRight()
@@ -70,33 +66,43 @@ void mario::stop()
 	this->characterVelocity.x = 0;
 }
 
-void mario::update(double timeElapsed)
-{
+void mario::update(double timeElapsed, collision collisionType)
+{	
 	static int startHeight, actualHeight;
-	
-	this->position.x += this->characterVelocity.x * timeElapsed;
-	this->position.y += characterVelocity.y * timeElapsed;
-	
 	if (isJumping)
 		actualHeight = this->position.y;
 	else
 		startHeight = this->position.y;
-	if (isJumping && (startHeight - actualHeight) >= (int)maxJumpHeight)
-		this->characterVelocity.y = (double)moveSpeed;
-	else if (isJumping && actualHeight >= startHeight)
-	{
+	if ((isJumping && (startHeight - actualHeight) >= (int)maxJumpHeight) || !isJumping && collisionType == none)
+		this->fall();
+	if (collisionType == groundCollision)
+		this->stopFalling();
+
+	this->position.x += this->characterVelocity.x * timeElapsed;
+	this->position.y += characterVelocity.y * timeElapsed;
+}
+
+void mario::fall()
+{
+	this->isJumping = false;
+	this->isFalling = true;
+	this->characterVelocity.y = (double)moveSpeed;
+}
+
+void mario::stopFalling()
+{
+	if(this->isJumping != true)
 		this->characterVelocity.y = 0;
-		this->isJumping = false;
-		if (this->characterVelocity.x >= 0)
-			this->actualFrame = (int)moveRightStartFrame;
-		else if (this->characterVelocity.x < 0)
-			this->actualFrame = (int)moveLeftStartFrame;
-	}
+	this->isFalling = false;
+	if (this->characterVelocity.x >= 0)
+		this->actualFrame = (int)moveRightStartFrame;
+	else if (this->characterVelocity.x < 0)
+		this->actualFrame = (int)moveLeftStartFrame;
 }
 
 void mario::jump()
 {
-	if (isJumping)
+	if (isJumping || isFalling)
 		return;
 	else
 	{
@@ -114,8 +120,8 @@ void mario::render(SDL_Renderer* renderer)
 	SDL_Rect sprite;
 	sprite.x = this->position.x;
 	sprite.y = this->position.y;
-	sprite.w = this->animationFrames[actualFrame].w * 2;
-	sprite.h = this->animationFrames[actualFrame].h * 2;
+	sprite.w = (int)marioWidth;
+	sprite.h = (int)marioHeight;
 
 	SDL_RenderCopy(renderer, this->spriteSheet, &(this->animationFrames[this->actualFrame]), &sprite);
 }
@@ -123,7 +129,7 @@ void mario::render(SDL_Renderer* renderer)
 point mario::getPosition()
 { return this->position; }
 
-bool mario::checkEnemyCollisions(enemy** enemies, int count)
+bool mario::checkCollisions(enemy** enemies, int count)
 {
 	point enemyPosition;
 	for (int i = 0; i < count; i++)
@@ -131,32 +137,41 @@ bool mario::checkEnemyCollisions(enemy** enemies, int count)
 		enemyPosition = enemies[i]->getPosition();
 		if (this->position.x >= enemyPosition.x && this->position.x <= (enemyPosition.x + enemies[i]->getWidth())
 			|| (this->position.x + this->getWidth()) >= enemyPosition.x && (this->position.x + this->getWidth()) <= (enemyPosition.x + enemies[i]->getWidth()))
-			if ((this->position.y + this->getHeight()) >= enemyPosition.y && (this->position.y + this->getHeight()) <= (enemyPosition.y + enemies[i]->getHeight()))
+			if ((this->position.y + this->getHeight()) >= enemyPosition.y && (this->position.y + this->getHeight()) <= (enemyPosition.y + enemies[i]->getHeight())
+				|| this->position.y >= enemyPosition.y && this->position.y <= (enemyPosition.y + enemies[i]->getHeight()))
 				return true;
 	}
 	return false;
 }
 
-collision mario::checkTileCollisions(tile** tiles, int count)
+collision mario::checkCollisions(tile** tiles, int count)
 {
 	point tilePosition;
 	for (int i = 0; i < count; i++)
 	{
 		tilePosition = tiles[i]->getPosition();
+		if (tiles[i]->isVisible() != true)
+			continue;
 		if (this->position.x >= tilePosition.x && this->position.x <= (tilePosition.x + tiles[i]->getWidth())
 			|| (this->position.x + this->getWidth()) >= tilePosition.x && (this->position.x + this->getWidth()) <= (tilePosition.x + tiles[i]->getWidth()))
 		{
 			if ((this->position.y + this->getHeight()) >= tilePosition.y && (this->position.y + this->getHeight()) <= (tilePosition.y + tiles[i]->getHeight()))
-				return ground;
+				return groundCollision;
 			else if (this->position.y >= tilePosition.y && this->position.y <= (tilePosition.y + tiles[i]->getHeight()))
-				return platform;
+			{
+				tiles[i]->disable();
+				return platformCollision;
+			}
 		}
 	}
 	return none;
 }
 
 int mario::getWidth()
-{ return this->animationFrames[this->actualFrame].w * 2; }
+{ return (int)marioWidth; }
 
 int mario::getHeight()
-{ return this->animationFrames[this->actualFrame].h * 2; }
+{ return (int)marioHeight; }
+
+void mario::setPosition(point p)
+{ this->position = p; }

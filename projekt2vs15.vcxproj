@@ -90,6 +90,8 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mario.cpp" />
     <ClCompile Include="point.cpp" />
@@ -110,10 +112,13 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Image>
     <Image Include="spritesheet.bmp" />
+    <Image Include="tiles.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="collision.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="game.h" />
+    <ClInclude Include="level.h" />
     <ClInclude Include="mario.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="sdl.h" />

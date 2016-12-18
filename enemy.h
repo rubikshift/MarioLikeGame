@@ -9,6 +9,14 @@ enum enemyInfo
 	enemyMoveSpeed = 60 //pixels per second
 };
 
+enum enemyDefaultSize
+{
+	enemySpriteWidth = 32, //pixels
+	enemySpriteHeight = 32, //pixels
+	enemyWidth = 32, //pixels
+	enemyHeight = 32 //pixels
+};
+
 class enemy
 {
 	private:
@@ -19,9 +27,9 @@ class enemy
 		SDL_Rect animationFrames[enemyAnimationFramesCount];
 		SDL_Texture* spriteSheet;
 		velocity actualVelocity;
+
 	public:
-		enemy(char* spriteSheetFile, int spriteWidth, int spriteHeight, point start, point end, SDL_Renderer* renderer);
-		~enemy();
+		enemy(SDL_Texture* loadedSprite, int spriteWidth, int spriteHeight, point start, point end, SDL_Renderer* renderer);
 		void update(double timeElapsed);
 		void render(SDL_Renderer* renderer);
 		point getPosition();

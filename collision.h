@@ -1,7 +1,7 @@
 #pragma once
 enum collision
 {
-	ground,
-	platform,
+	groundCollision,
+	platformCollision,
 	none
 };

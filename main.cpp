@@ -2,6 +2,7 @@
 #include "basicSDLFunctions.h"
 #include "mario.h"
 #include "enemy.h"
+#include "level.h"
 
 // main
 #ifdef __cplusplus
@@ -14,7 +15,7 @@ int main(int argc, char **argv)
 	double delta, worldTime;
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
-	SDL_Texture *scrtex;
+	SDL_Texture *scrtex, *marioTexture, *enemyTexture, *tileTexture;
 	SDL_Window *window;
 	SDL_Renderer *renderer;	
 
@@ -60,18 +61,22 @@ int main(int argc, char **argv)
 	SDL_SetColorKey(charset, true, 0x000000);
 
 	char text[128];
-	int black = SDL_MapRGB(screen->format, 0x00, 0x00, 0x00);
-	int green = SDL_MapRGB(screen->format, 0x00, 0xFF, 0x00);
-	int red = SDL_MapRGB(screen->format, 0xFF, 0x00, 0x00);
-	int blue = SDL_MapRGB(screen->format, 0x11, 0x11, 0xCC);
 	int skyBlue = SDL_MapRGB(screen->format, 119, 181, 254);
 
+	marioTexture = loadTexture("spritesheet.bmp", renderer);
+	enemyTexture = loadTexture("eti.bmp", renderer);
+	tileTexture = loadTexture("tiles.bmp", renderer);
+
+	mario* player = new mario(marioTexture, 16, 16, {100, SCREEN_HEIGHT - 64}, renderer);
+	//enemy* newEnemy = new enemy(enemyTexture, 32, 32, {100, SCREEN_HEIGHT - 64}, {200, SCREEN_HEIGHT - 64}, renderer);
+	//tile* ground = new tile(tileTexture, groundTile, 16, 16, {100, SCREEN_HEIGHT - 32}, renderer);
+	//tile* platform = new tile(tileTexture, platformTile, 16, 16, {100, SCREEN_HEIGHT - 164}, renderer);
+	level* gameLevel = new level("level1.txt", player, tileTexture, enemyTexture, renderer);
 	t1 = SDL_GetTicks();
 
 	quit = 0;
 	worldTime = 0;
-	mario* player = new mario("spritesheet.bmp", 16, 16, {10, SCREEN_HEIGHT - 64}, renderer);
-	enemy* newEnemy = new enemy("eti.bmp", 32, 32, {100, SCREEN_HEIGHT - 64}, {200, SCREEN_HEIGHT - 64}, renderer);
+
 	while(!quit)
 	{
 		t2 = SDL_GetTicks();
@@ -84,22 +89,19 @@ int main(int argc, char **argv)
 		SDL_FillRect(screen, NULL, skyBlue);
 
 		sprintf(text, "Czas trwania = %.1lf s  Liczba zyc = %d  Liczba monet = %d", worldTime, player->lives, player->coins);
-		DrawString(screen, 10, 10, text, charset);
+		drawString(screen, 10, 10, text, charset);
 		sprintf(text, "Esc - wyjscie, n - nowa gra, l - wczytaj gre, s - zapisz gre");
-		DrawString(screen, 10, 26, text, charset);
-		if (player->checkEnemyCollisions(&newEnemy, 1))
-		{
-			sprintf(text, "kolizja!!!!!!");
-			DrawString(screen, 10, 40, text, charset);
-		}
+		drawString(screen, 10, 26, text, charset);
 
 		SDL_UpdateTexture(scrtex, NULL, screen->pixels, screen->pitch);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, scrtex, NULL, NULL);
-		player->update(delta);
-		newEnemy->update(delta);
-		player->render(renderer);
-		newEnemy->render(renderer);
+		gameLevel->update(delta);
+		//player->update(delta, groundCollision);
+		//player->render(renderer);
+		gameLevel->render(renderer);
+		//for (int i = 0; i < gameLevel->tilesCount; i++)
+			//gameLevel->tiles[i]->render(renderer);
 		SDL_RenderPresent(renderer);
 
 		while(SDL_PollEvent(&event)) 
@@ -133,8 +135,12 @@ int main(int argc, char **argv)
 	SDL_DestroyTexture(scrtex);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+	SDL_DestroyTexture(marioTexture);
+	SDL_DestroyTexture(enemyTexture);
+	SDL_DestroyTexture(tileTexture);
 	delete player;
-	delete newEnemy;
+	//delete newEnemy;
+	//delete ground;
 
 	SDL_Quit();
 	return 0;

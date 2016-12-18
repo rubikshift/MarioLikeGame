@@ -2,7 +2,7 @@
 
 // narysowanie napisu txt na powierzchni screen, zaczynajπc od punktu (x, y)
 // charset to bitmapa 128x128 zawierajπca znaki
-void DrawString(SDL_Surface *screen, int x, int y, const char *text,
+void drawString(SDL_Surface *screen, int x, int y, const char *text,
 	SDL_Surface *charset)
 {
 	int px, py, c;
@@ -28,7 +28,7 @@ void DrawString(SDL_Surface *screen, int x, int y, const char *text,
 
 // narysowanie na ekranie screen powierzchni sprite w punkcie (x, y)
 // (x, y) to punkt úrodka obrazka sprite na ekranie
-void DrawSurface(SDL_Surface *screen, SDL_Surface *sprite, int x, int y)
+void drawSurface(SDL_Surface *screen, SDL_Surface *sprite, int x, int y)
 {
 	SDL_Rect dest;
 	dest.x = x - sprite->w / 2;
@@ -40,7 +40,7 @@ void DrawSurface(SDL_Surface *screen, SDL_Surface *sprite, int x, int y)
 
 
 // rysowanie pojedynczego pixela
-void DrawPixel(SDL_Surface *surface, int x, int y, Uint32 color)
+void drawPixel(SDL_Surface *surface, int x, int y, Uint32 color)
 {
 	int bpp = surface->format->BytesPerPixel;
 	Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
@@ -50,10 +50,10 @@ void DrawPixel(SDL_Surface *surface, int x, int y, Uint32 color)
 
 // rysowanie linii o d≥ugoúci l w pionie (gdy dx = 0, dy = 1) 
 // bπdü poziomie (gdy dx = 1, dy = 0)
-void DrawLine(SDL_Surface *screen, int x, int y, int l, int dx, int dy, Uint32 color)
+void drawLine(SDL_Surface *screen, int x, int y, int l, int dx, int dy, Uint32 color)
 {
 	for (int i = 0; i < l; i++) {
-		DrawPixel(screen, x, y, color);
+		drawPixel(screen, x, y, color);
 		x += dx;
 		y += dy;
 	};
@@ -61,19 +61,19 @@ void DrawLine(SDL_Surface *screen, int x, int y, int l, int dx, int dy, Uint32 c
 
 
 // rysowanie prostokπta o d≥ugoúci bokÛw l i k
-void DrawRectangle(SDL_Surface *screen, int x, int y, int l, int k,
+void drawRectangle(SDL_Surface *screen, int x, int y, int l, int k,
 	Uint32 outlineColor, Uint32 fillColor)
 {
 	int i;
-	DrawLine(screen, x, y, k, 0, 1, outlineColor);
-	DrawLine(screen, x + l - 1, y, k, 0, 1, outlineColor);
-	DrawLine(screen, x, y, l, 1, 0, outlineColor);
-	DrawLine(screen, x, y + k - 1, l, 1, 0, outlineColor);
+	drawLine(screen, x, y, k, 0, 1, outlineColor);
+	drawLine(screen, x + l - 1, y, k, 0, 1, outlineColor);
+	drawLine(screen, x, y, l, 1, 0, outlineColor);
+	drawLine(screen, x, y + k - 1, l, 1, 0, outlineColor);
 	for (i = y + 1; i < y + k - 1; i++)
-		DrawLine(screen, x + 1, i, l - 2, 1, 0, fillColor);
+		drawLine(screen, x + 1, i, l - 2, 1, 0, fillColor);
 };
 
-SDL_Texture* LoadTexture(char* filename, SDL_Renderer* renderer)
+SDL_Texture* loadTexture(char* filename, SDL_Renderer* renderer)
 {
 	SDL_Surface* surface = SDL_LoadBMP(filename);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);

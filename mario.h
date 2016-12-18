@@ -20,32 +20,42 @@ enum marioInfo
 	maxJumpHeight = 100 //pixels
 };
 
+enum marioDefaultSize
+{
+	marioSpriteWidth = 16, //pixels
+	marioSpriteHeight = 16, //pixels
+	marioWidth = 32, //pixels
+	marioHeight = 32 //pixels
+};
+
 class mario
 {
 	private:
 		
 		int actualFrame;
 		bool isJumping;
+		bool isFalling;
 		SDL_Rect animationFrames[animationFramesCount];
 		SDL_Texture* spriteSheet;
 		velocity characterVelocity;
 		point position;
 	public:
-		mario(char* spriteSheetFile, int spriteWidth, int spriteHeight, point start, SDL_Renderer* renderer);
-		~mario();
-
 		int lives;
 		int coins;
 
+		mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, point start, SDL_Renderer* renderer);
 		void moveRight();
 		void moveLeft();
 		void jump();
+		void fall();
 		void stop();
-		void update(double timeElapsed);
+		void stopFalling();
+		void update(double timeElapsed, collision type);
 		void render(SDL_Renderer* renderer);
 		point getPosition();
-		collision checkTileCollisions(tile** tiles, int count);
-		bool checkEnemyCollisions(enemy** enemies, int count);
+		void setPosition(point p);
+		collision checkCollisions(tile** tiles, int count);
+		bool checkCollisions(enemy** enemies, int count);
 		int getWidth();
 		int getHeight();
 };
