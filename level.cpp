@@ -30,6 +30,7 @@ level::~level()
 
 void level::render(SDL_Renderer* renderer)
 {
+
 	this->player->render(renderer);
 	for (int i = 0; i < this->enemiesCount; i++)
 		this->enemies[i]->render(renderer);
@@ -89,7 +90,7 @@ void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Render
 					this->enemiesCount++;
 			}
 		this->tiles = new tile*[this->tilesCount];
-		this->enemies = new enemy*[this->enemiesCount];
+		this->enemies = new enemy*[this->enemiesCount/2];
 		for (int y = 0; y < LEVEL_LINES; y++)
 			for (int x = 0; x < this->levelWidth; x++)
 			{
@@ -115,13 +116,19 @@ void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Render
 					this->endPosition = p;
 				else if ((data[y][x] >= 'a' && data[y][x] <= 'z') || (data[y][x] >= 'A' && data[y][x] <= 'Z'))
 				{
-					for (int i = x; i < this->levelWidth; i++)
+					for (int i = x + 1; i < this->levelWidth; i++)
 						if (data[y][x] == data[y][i])
+						{
 							q = {(double)i * (double)tileWidth, y * (double)tileHeight};
-					this->enemies[enemyIterator] = new enemy(enemyTexture, enemySpriteWidth, enemySpriteHeight, p, q, renderer);
-					enemyIterator++;
+							this->enemies[enemyIterator] = new enemy(enemyTexture, enemySpriteWidth, enemySpriteHeight, p, q, renderer);
+							enemyIterator++;
+						}
 				}
 			}
 	}
+	enemiesCount = enemyIterator;
 	fclose(fileStream);
 }
+
+double level::getTime()
+{ return this->levelTime; }

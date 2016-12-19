@@ -159,8 +159,12 @@ collision mario::checkCollisions(tile** tiles, int count)
 				return groundCollision;
 			else if (this->position.y >= tilePosition.y && this->position.y <= (tilePosition.y + tiles[i]->getHeight()))
 			{
-				tiles[i]->disable();
-				return platformCollision;
+				if (this->isJumping)
+				{
+					tiles[i]->disable();
+					this->fall();
+					return platformCollision;
+				}
 			}
 		}
 	}

@@ -10,24 +10,23 @@ class level
 	private:
 		char* fileName;
 		int levelWidth;
-
+		int enemiesCount;
+		int tilesCount;
 		double levelTime;
 		
-		
+		tile** tiles;
+		enemy** enemies;
+		mario* player;
+		point startPosition;
+		point endPosition;
 
 		void load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Renderer* renderer);
 	
 	public:
-	tile** tiles;
-	enemy** enemies;
-	mario* player;
-	point startPosition;
-	point endPosition;
-	int enemiesCount;
-	int tilesCount;
 		level(char* fileName, mario* player, SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Renderer* rendere);
 		~level();
 		void render(SDL_Renderer* renderer);
 		void update(double timeElapsed);
+		double getTime();
 
 };

@@ -11,7 +11,7 @@ extern "C"
 int main(int argc, char **argv)
 {
 	int t1, t2, rc;
-	bool quit;
+	bool quit  = false;
 	double delta, worldTime;
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
@@ -68,14 +68,9 @@ int main(int argc, char **argv)
 	tileTexture = loadTexture("tiles.bmp", renderer);
 
 	mario* player = new mario(marioTexture, 16, 16, {100, SCREEN_HEIGHT - 64}, renderer);
-	//enemy* newEnemy = new enemy(enemyTexture, 32, 32, {100, SCREEN_HEIGHT - 64}, {200, SCREEN_HEIGHT - 64}, renderer);
-	//tile* ground = new tile(tileTexture, groundTile, 16, 16, {100, SCREEN_HEIGHT - 32}, renderer);
-	//tile* platform = new tile(tileTexture, platformTile, 16, 16, {100, SCREEN_HEIGHT - 164}, renderer);
 	level* gameLevel = new level("level1.txt", player, tileTexture, enemyTexture, renderer);
+	
 	t1 = SDL_GetTicks();
-
-	quit = 0;
-	worldTime = 0;
 
 	while(!quit)
 	{
@@ -84,11 +79,9 @@ int main(int argc, char **argv)
 		delta = (t2 - t1) * 0.001;
 		t1 = t2;
 
-		worldTime += delta;
-
 		SDL_FillRect(screen, NULL, skyBlue);
 
-		sprintf(text, "Czas trwania = %.1lf s  Liczba zyc = %d  Liczba monet = %d", worldTime, player->lives, player->coins);
+		sprintf(text, "Czas trwania = %.1lf s  Liczba zyc = %d  Liczba monet = %d", gameLevel->getTime(), player->lives, player->coins);
 		drawString(screen, 10, 10, text, charset);
 		sprintf(text, "Esc - wyjscie, n - nowa gra, l - wczytaj gre, s - zapisz gre");
 		drawString(screen, 10, 26, text, charset);
@@ -97,11 +90,7 @@ int main(int argc, char **argv)
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, scrtex, NULL, NULL);
 		gameLevel->update(delta);
-		//player->update(delta, groundCollision);
-		//player->render(renderer);
 		gameLevel->render(renderer);
-		//for (int i = 0; i < gameLevel->tilesCount; i++)
-			//gameLevel->tiles[i]->render(renderer);
 		SDL_RenderPresent(renderer);
 
 		while(SDL_PollEvent(&event)) 
@@ -139,8 +128,7 @@ int main(int argc, char **argv)
 	SDL_DestroyTexture(enemyTexture);
 	SDL_DestroyTexture(tileTexture);
 	delete player;
-	//delete newEnemy;
-	//delete ground;
+	delete gameLevel;
 
 	SDL_Quit();
 	return 0;
