@@ -92,6 +92,7 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="level.cpp" />
+    <ClCompile Include="levelList.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mario.cpp" />
     <ClCompile Include="point.cpp" />
@@ -119,6 +120,7 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
     <ClInclude Include="enemy.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="level.h" />
+    <ClInclude Include="levelList.h" />
     <ClInclude Include="mario.h" />
     <ClInclude Include="point.h" />
     <ClInclude Include="sdl.h" />

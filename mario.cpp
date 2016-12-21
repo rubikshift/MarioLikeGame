@@ -1,9 +1,8 @@
 #include "mario.h"
 #include "basicSDLFunctions.h"
 
-mario::mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, point start, SDL_Renderer* renderer)
+mario::mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, SDL_Renderer* renderer)
 {
-	this->position = start;
 	this->coins = 0;
 	this->lives = (int)numberOfLives;
 	this->isJumping = false;
@@ -77,7 +76,8 @@ void mario::update(double timeElapsed, collision collisionType)
 		this->fall();
 	if (collisionType == groundCollision)
 		this->stopFalling();
-
+	else if (collisionType == coinCollision)
+		this->coins++;
 	this->position.x += this->characterVelocity.x * timeElapsed;
 	this->position.y += characterVelocity.y * timeElapsed;
 }
@@ -93,11 +93,16 @@ void mario::stopFalling()
 {
 	if(this->isJumping != true)
 		this->characterVelocity.y = 0;
-	this->isFalling = false;
-	if (this->characterVelocity.x >= 0)
-		this->actualFrame = (int)moveRightStartFrame;
-	else if (this->characterVelocity.x < 0)
-		this->actualFrame = (int)moveLeftStartFrame;
+	if(this->isFalling)
+	{
+		this->isFalling = false;
+		if (this->characterVelocity.x >= 0)
+			this->actualFrame = (int)moveRightStartFrame;
+		else if (this->characterVelocity.x < 0)
+			this->actualFrame = (int)moveLeftStartFrame;
+	}
+	int i = (int)(this->position.y) / (int)marioHeight;
+	this->position.y = (double)i * (double)marioHeight;
 }
 
 void mario::jump()
@@ -152,8 +157,16 @@ collision mario::checkCollisions(tile** tiles, int count)
 		tilePosition = tiles[i]->getPosition();
 		if (tiles[i]->isVisible() != true)
 			continue;
+		if ((this->position.y >= tilePosition.y && this->position.y <= (tilePosition.y + tiles[i]->getHeight()))
+			|| ((this->position.y + this->getHeight()) > tilePosition.y && (this->position.y + this->getHeight()) < (tilePosition.y + tiles[i]->getHeight())))
+		{
+			if ((this->position.x + this->getWidth()) > tilePosition.x && (this->position.x + this->getWidth()) < (tilePosition.x + tiles[i]->getWidth()) && this->characterVelocity.x > 0)
+				this->characterVelocity.x = 0;
+			else if (this->position.x < (tilePosition.x + tiles[i]->getWidth()) && this->position.x > tilePosition.x && this->characterVelocity.x < 0)
+				this->characterVelocity.x = 0;
+		}
 		if (this->position.x >= tilePosition.x && this->position.x <= (tilePosition.x + tiles[i]->getWidth())
-			|| (this->position.x + this->getWidth()) >= tilePosition.x && (this->position.x + this->getWidth()) <= (tilePosition.x + tiles[i]->getWidth()))
+			|| (this->position.x + this->getWidth()) > tilePosition.x && (this->position.x + this->getWidth()) < (tilePosition.x + tiles[i]->getWidth()))
 		{
 			if ((this->position.y + this->getHeight()) >= tilePosition.y && (this->position.y + this->getHeight()) <= (tilePosition.y + tiles[i]->getHeight()))
 				return groundCollision;
@@ -163,10 +176,13 @@ collision mario::checkCollisions(tile** tiles, int count)
 				{
 					tiles[i]->disable();
 					this->fall();
-					return platformCollision;
+					if (tiles[i]->type == coinTile)
+						return coinCollision;
+					else return platformCollision;
 				}
 			}
 		}
+		
 	}
 	return none;
 }

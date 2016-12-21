@@ -43,7 +43,7 @@ class mario
 		int lives;
 		int coins;
 
-		mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, point start, SDL_Renderer* renderer);
+		mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, SDL_Renderer* renderer);
 		void moveRight();
 		void moveLeft();
 		void jump();

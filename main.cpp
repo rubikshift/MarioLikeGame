@@ -3,6 +3,8 @@
 #include "mario.h"
 #include "enemy.h"
 #include "level.h"
+#include "game.h"
+#include "levelList.h"
 
 // main
 #ifdef __cplusplus
@@ -10,9 +12,10 @@ extern "C"
 #endif
 int main(int argc, char **argv)
 {
-	int t1, t2, rc;
-	bool quit  = false;
+	int t1, t2, rc, actualLevel = 0;
+	bool quit  = false, reload = false;
 	double delta, worldTime;
+	levelList levels;
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
 	SDL_Texture *scrtex, *marioTexture, *enemyTexture, *tileTexture;
@@ -61,38 +64,65 @@ int main(int argc, char **argv)
 	SDL_SetColorKey(charset, true, 0x000000);
 
 	char text[128];
+	int black = SDL_MapRGB(screen->format, 0, 0, 0);
 	int skyBlue = SDL_MapRGB(screen->format, 119, 181, 254);
 
 	marioTexture = loadTexture("spritesheet.bmp", renderer);
 	enemyTexture = loadTexture("eti.bmp", renderer);
 	tileTexture = loadTexture("tiles.bmp", renderer);
 
-	mario* player = new mario(marioTexture, 16, 16, {100, SCREEN_HEIGHT - 64}, renderer);
-	level* gameLevel = new level("level1.txt", player, tileTexture, enemyTexture, renderer);
+	mario* player = new mario(marioTexture, 16, 16, renderer);
+	level** gameLevels = new level*[levels.size];
+	for (int i = 0; i < levels.size; i++)
+		gameLevels[i] = new level(levels[i], player, tileTexture, enemyTexture, renderer);
 	
+	gameLevels[actualLevel]->start();
 	t1 = SDL_GetTicks();
-
 	while(!quit)
 	{
+		SDL_RenderClear(renderer);
 		t2 = SDL_GetTicks();
 
 		delta = (t2 - t1) * 0.001;
 		t1 = t2;
+		if (reload)
+		{
+			delete gameLevels[actualLevel];
+			gameLevels[actualLevel] = new level(levels[actualLevel], player, tileTexture, enemyTexture, renderer);
+			gameLevels[actualLevel]->start();
+			reload = false;
+			continue;
+		}
+		if (gameLevels[actualLevel]->isFinished() && actualLevel < levels.size - 1)
+		{
+			actualLevel++;
+			gameLevels[actualLevel]->start();
+		}
+		else if ((gameLevels[actualLevel]->isFinished() && actualLevel == levels.size - 1) || player->lives == 0)
+		{
+			SDL_FillRect(screen, NULL, black);
+			sprintf(text, "Koniec Gry!");
+			drawString(screen, 10, 10, text, charset);
+			sprintf(text, "Esc - wyjscie, n - nowa gra, l - wczytaj gre");
+			drawString(screen, 10, 26, text, charset);
+			SDL_UpdateTexture(scrtex, NULL, screen->pixels, screen->pitch);
+			SDL_RenderCopy(renderer, scrtex, NULL, NULL);
+		}
+		else
+		{
+			SDL_FillRect(screen, NULL, skyBlue);
 
-		SDL_FillRect(screen, NULL, skyBlue);
+			sprintf(text, "Czas trwania = %.1lf s  Liczba zyc = %d  Liczba monet = %d", gameLevels[actualLevel]->getTime(), player->lives, player->coins);
+			drawString(screen, 10, 10, text, charset);
+			sprintf(text, "Esc - wyjscie, n - nowa gra, l - wczytaj gre, s - zapisz gre");
+			drawString(screen, 10, 26, text, charset);
+			SDL_UpdateTexture(scrtex, NULL, screen->pixels, screen->pitch);
+			SDL_RenderCopy(renderer, scrtex, NULL, NULL);
+			reload = gameLevels[actualLevel]->update(delta);
+			gameLevels[actualLevel]->render(renderer);
+		}
 
-		sprintf(text, "Czas trwania = %.1lf s  Liczba zyc = %d  Liczba monet = %d", gameLevel->getTime(), player->lives, player->coins);
-		drawString(screen, 10, 10, text, charset);
-		sprintf(text, "Esc - wyjscie, n - nowa gra, l - wczytaj gre, s - zapisz gre");
-		drawString(screen, 10, 26, text, charset);
-
-		SDL_UpdateTexture(scrtex, NULL, screen->pixels, screen->pitch);
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, scrtex, NULL, NULL);
-		gameLevel->update(delta);
-		gameLevel->render(renderer);
 		SDL_RenderPresent(renderer);
-
 		while(SDL_PollEvent(&event)) 
 		{
 			switch(event.type) 
@@ -104,7 +134,11 @@ int main(int argc, char **argv)
 						case SDLK_UP: player->jump(); break;
 						case SDLK_RIGHT: player->moveRight(); break;
 						case SDLK_LEFT: player->moveLeft(); break;
-						case SDLK_n: break;
+						case SDLK_n: 
+							newGame(player); 
+							actualLevel = 0; 
+							reload = true;
+							break;
 						case SDLK_s: break;
 						case SDLK_l: break;
 					}
@@ -127,8 +161,6 @@ int main(int argc, char **argv)
 	SDL_DestroyTexture(marioTexture);
 	SDL_DestroyTexture(enemyTexture);
 	SDL_DestroyTexture(tileTexture);
-	delete player;
-	delete gameLevel;
 
 	SDL_Quit();
 	return 0;

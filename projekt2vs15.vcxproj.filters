@@ -50,6 +50,9 @@
     <ClCompile Include="level.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="levelList.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sdl.h">
@@ -80,6 +83,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="level.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="levelList.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

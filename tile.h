@@ -26,6 +26,8 @@ class tile
 		bool visible;
 
 	public:
+		tileType type;
+
 		tile(SDL_Texture* loadedTexture, tileType type, int textureWidth, int textureHeight, point position, SDL_Renderer* renderer);
 		void render(SDL_Renderer* renderer);
 		void disable();

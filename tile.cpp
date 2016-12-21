@@ -3,6 +3,7 @@
 
 tile::tile(SDL_Texture* loadedTexture, tileType type, int textureWidth, int textureHeight, point position, SDL_Renderer* renderer)
 {
+	this->type = type;
 	this->position = position;
 	this->texture = loadedTexture;
 	this->visible = true;

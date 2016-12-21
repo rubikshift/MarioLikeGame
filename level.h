@@ -12,6 +12,7 @@ class level
 		int levelWidth;
 		int enemiesCount;
 		int tilesCount;
+		double loadedLevelTime;
 		double levelTime;
 		
 		tile** tiles;
@@ -26,7 +27,9 @@ class level
 		level(char* fileName, mario* player, SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Renderer* rendere);
 		~level();
 		void render(SDL_Renderer* renderer);
-		void update(double timeElapsed);
+		bool update(double timeElapsed);
 		double getTime();
+		bool isFinished();
+		void start();
 
 };

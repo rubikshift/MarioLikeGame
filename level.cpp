@@ -15,7 +15,6 @@ level::level(char* fileName, mario* player, SDL_Texture* tileTexture, SDL_Textur
 	tilesCount = 0;
 	enemiesCount = 0;
 	this->load(tileTexture, enemyTexture, renderer);
-	//this->player->setPosition(this->startPosition);
 }
 
 level::~level()
@@ -38,14 +37,21 @@ void level::render(SDL_Renderer* renderer)
 		this->tiles[i]->render(renderer);
 }
 
-void level::update(double timeElapsed)
+bool level::update(double timeElapsed)
 {
-	this->player->checkCollisions(this->enemies, this->enemiesCount);
+	point p = this->player->getPosition();
+	if (this->player->checkCollisions(this->enemies, this->enemiesCount) || p.y >= SCREEN_HEIGHT || levelTime <= 0)
+	{
+		this->player->coins = 0;
+		this->player->lives--;
+		return true;
+	}
 	collision tileCollisionType = this->player->checkCollisions(this->tiles, this->tilesCount);
 	this->player->update(timeElapsed, tileCollisionType);
 	for (int i = 0; i < this->enemiesCount; i++)
 		this->enemies[i]->update(timeElapsed);
 	this->levelTime -= timeElapsed;
+	return false;
 }
 
 void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Renderer* renderer)
@@ -60,14 +66,14 @@ void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Render
 	{
 		fscanf(fileStream, "%s", buff);
 		fscanf(fileStream, "%s", buff);
-		this->levelTime = atoi(buff);
+		this->loadedLevelTime = atoi(buff);
 		fscanf(fileStream, "%s", buff);
 		if (buff[0] == 's' || buff[0] == 'S')
-			levelTime *= SECOND;
+			this->loadedLevelTime *= SECOND;
 		else if (buff[0] == 'm' || buff[0] == 'M')
-			levelTime *= MINUTE;
+			this->loadedLevelTime *= MINUTE;
 		else if (buff[0] == 'h' || buff[0] == 'H')
-			levelTime *= HOUR;
+			this->loadedLevelTime *= HOUR;
 
 		fscanf(fileStream, "%s", buff);
 		fscanf(fileStream, "%s", buff);
@@ -132,3 +138,17 @@ void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Render
 
 double level::getTime()
 { return this->levelTime; }
+
+bool level::isFinished()
+{
+	point p = this->player->getPosition();
+	if (p.x >= this->endPosition.x)
+		return true;
+	else return false;
+}
+
+void level::start()
+{ 
+	this->levelTime = this->loadedLevelTime;
+	this->player->setPosition(this->startPosition);
+}

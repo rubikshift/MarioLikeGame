@@ -3,5 +3,6 @@ enum collision
 {
 	groundCollision,
 	platformCollision,
+	coinCollision,
 	none
 };
