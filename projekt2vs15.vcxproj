@@ -89,8 +89,8 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="coin.cpp" />
     <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="game.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="levelList.cpp" />
     <ClCompile Include="main.cpp" />
@@ -100,6 +100,7 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
     <ClCompile Include="tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="coin.bmp" />
     <Image Include="cs8x8.bmp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
@@ -116,9 +117,9 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
     <Image Include="tiles.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="coin.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="enemy.h" />
-    <ClInclude Include="game.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="levelList.h" />
     <ClInclude Include="mario.h" />
@@ -127,6 +128,9 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
     <ClInclude Include="basicSDLFunctions.h" />
     <ClInclude Include="tile.h" />
     <ClInclude Include="velocity.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="level1.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

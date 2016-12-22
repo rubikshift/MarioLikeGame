@@ -3,9 +3,17 @@
 #include "mario.h"
 #include "enemy.h"
 #include "level.h"
-#include "game.h"
 #include "levelList.h"
 
+
+void centerCamera(SDL_Rect* camera, int levelWidth, int x)
+{
+	camera->x = (x + (int)marioWidth / 2) - SCREEN_WIDTH / 2;
+	if (camera->x < 0)
+		camera->x = 0;
+	if (camera->x > levelWidth - camera->w)
+		camera->x = levelWidth - camera->w;
+}
 // main
 #ifdef __cplusplus
 extern "C"
@@ -18,9 +26,14 @@ int main(int argc, char **argv)
 	levelList levels;
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
-	SDL_Texture *scrtex, *marioTexture, *enemyTexture, *tileTexture;
+	SDL_Texture *scrtex, *marioTexture, *enemyTexture, *tileTexture, *coinTexture;
 	SDL_Window *window;
 	SDL_Renderer *renderer;	
+	SDL_Rect camera;
+	camera.x = 0;
+	camera.y = 0;
+	camera.h = SCREEN_HEIGHT;
+	camera.w = SCREEN_WIDTH;
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0) 
 	{
@@ -70,12 +83,13 @@ int main(int argc, char **argv)
 	marioTexture = loadTexture("spritesheet.bmp", renderer);
 	enemyTexture = loadTexture("eti.bmp", renderer);
 	tileTexture = loadTexture("tiles.bmp", renderer);
+	coinTexture = loadTexture("coin.bmp", renderer);
 
 	mario* player = new mario(marioTexture, 16, 16, renderer);
 	level** gameLevels = new level*[levels.size];
 	for (int i = 0; i < levels.size; i++)
-		gameLevels[i] = new level(levels[i], player, tileTexture, enemyTexture, renderer);
-	
+		gameLevels[i] = new level(levels[i], player, tileTexture, enemyTexture, coinTexture, renderer);
+
 	gameLevels[actualLevel]->start();
 	t1 = SDL_GetTicks();
 	while(!quit)
@@ -88,7 +102,7 @@ int main(int argc, char **argv)
 		if (reload)
 		{
 			delete gameLevels[actualLevel];
-			gameLevels[actualLevel] = new level(levels[actualLevel], player, tileTexture, enemyTexture, renderer);
+			gameLevels[actualLevel] = new level(levels[actualLevel], player, tileTexture, enemyTexture, coinTexture, renderer);
 			gameLevels[actualLevel]->start();
 			reload = false;
 			continue;
@@ -111,7 +125,7 @@ int main(int argc, char **argv)
 		else
 		{
 			SDL_FillRect(screen, NULL, skyBlue);
-
+			centerCamera(&camera, gameLevels[actualLevel]->getWidth()*(int)tileWidth, player->getPosition().x);
 			sprintf(text, "Czas trwania = %.1lf s  Liczba zyc = %d  Liczba monet = %d", gameLevels[actualLevel]->getTime(), player->lives, player->coins);
 			drawString(screen, 10, 10, text, charset);
 			sprintf(text, "Esc - wyjscie, n - nowa gra, l - wczytaj gre, s - zapisz gre");
@@ -119,7 +133,7 @@ int main(int argc, char **argv)
 			SDL_UpdateTexture(scrtex, NULL, screen->pixels, screen->pitch);
 			SDL_RenderCopy(renderer, scrtex, NULL, NULL);
 			reload = gameLevels[actualLevel]->update(delta);
-			gameLevels[actualLevel]->render(renderer);
+			gameLevels[actualLevel]->render(renderer, camera.x);
 		}
 
 		SDL_RenderPresent(renderer);
@@ -135,7 +149,8 @@ int main(int argc, char **argv)
 						case SDLK_RIGHT: player->moveRight(); break;
 						case SDLK_LEFT: player->moveLeft(); break;
 						case SDLK_n: 
-							newGame(player); 
+							player->lives = (int)numberOfLives;
+							player->coins = 0;
 							actualLevel = 0; 
 							reload = true;
 							break;

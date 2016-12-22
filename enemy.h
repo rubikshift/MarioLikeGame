@@ -31,7 +31,7 @@ class enemy
 	public:
 		enemy(SDL_Texture* loadedSprite, int spriteWidth, int spriteHeight, point start, point end, SDL_Renderer* renderer);
 		void update(double timeElapsed);
-		void render(SDL_Renderer* renderer);
+		void render(SDL_Renderer* renderer, int x);
 		point getPosition();
 		int getWidth();
 		int getHeight();

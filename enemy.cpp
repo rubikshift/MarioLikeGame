@@ -30,10 +30,10 @@ void enemy::update(double timeElapsed)
 	this->position.x += actualVelocity.x * timeElapsed;
 }
 
-void enemy::render(SDL_Renderer* renderer)
+void enemy::render(SDL_Renderer* renderer, int x)
 {
 	SDL_Rect sprite;
-	sprite.x = this->position.x;
+	sprite.x = this->position.x - x;
 	sprite.y = this->position.y;
 	sprite.w = (int)enemyWidth;
 	sprite.h = (int)enemyHeight;

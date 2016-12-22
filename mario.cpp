@@ -120,10 +120,10 @@ void mario::jump()
 	}
 }
 
-void mario::render(SDL_Renderer* renderer)
+void mario::render(SDL_Renderer* renderer, int x)
 {
 	SDL_Rect sprite;
-	sprite.x = this->position.x;
+	sprite.x = this->position.x - x;
 	sprite.y = this->position.y;
 	sprite.w = (int)marioWidth;
 	sprite.h = (int)marioHeight;
@@ -149,7 +149,7 @@ bool mario::checkCollisions(enemy** enemies, int count)
 	return false;
 }
 
-collision mario::checkCollisions(tile** tiles, int count)
+collision mario::checkCollisions(tile** tiles, int count, coin** coins, int coinCount)
 {
 	point tilePosition;
 	for (int i = 0; i < count; i++)
@@ -177,7 +177,12 @@ collision mario::checkCollisions(tile** tiles, int count)
 					tiles[i]->disable();
 					this->fall();
 					if (tiles[i]->type == coinTile)
+					{
+						for (int j = 0; j < coinCount; j++)
+							if (coins[j]->position == tilePosition && coins[j]->visible != true)
+								coins[j]->enable();
 						return coinCollision;
+					}
 					else return platformCollision;
 				}
 			}

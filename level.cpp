@@ -6,15 +6,16 @@
 #define MINUTE 60
 #define HOUR 3600
 
-level::level(char* fileName, mario* player, SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Renderer* renderer)
+level::level(char* fileName, mario* player, SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Texture* coinTexture, SDL_Renderer* renderer)
 {
 	int length = strlen(fileName) + 1;
 	this->fileName = new char[length];
 	memcpy(this->fileName, fileName, length);
 	this->player = player;
-	tilesCount = 0;
-	enemiesCount = 0;
-	this->load(tileTexture, enemyTexture, renderer);
+	this->tilesCount = 0;
+	this->enemiesCount = 0;
+	this->coinsCount = 0;
+	this->load(tileTexture, enemyTexture, coinTexture, renderer);
 }
 
 level::~level()
@@ -27,14 +28,16 @@ level::~level()
 	delete[] this->enemies;
 }
 
-void level::render(SDL_Renderer* renderer)
+void level::render(SDL_Renderer* renderer, int x)
 {
 
-	this->player->render(renderer);
+	this->player->render(renderer , x);
 	for (int i = 0; i < this->enemiesCount; i++)
-		this->enemies[i]->render(renderer);
+		this->enemies[i]->render(renderer, x);
 	for (int i = 0; i < this->tilesCount; i++)
-		this->tiles[i]->render(renderer);
+		this->tiles[i]->render(renderer, x);
+	for (int i = 0; i < this->coinsCount; i++)
+		this->coins[i]->render(renderer, x);
 }
 
 bool level::update(double timeElapsed)
@@ -46,21 +49,23 @@ bool level::update(double timeElapsed)
 		this->player->lives--;
 		return true;
 	}
-	collision tileCollisionType = this->player->checkCollisions(this->tiles, this->tilesCount);
+	collision tileCollisionType = this->player->checkCollisions(this->tiles, this->tilesCount, this->coins, this->coinsCount);
 	this->player->update(timeElapsed, tileCollisionType);
 	for (int i = 0; i < this->enemiesCount; i++)
 		this->enemies[i]->update(timeElapsed);
+	for (int i = 0; i < this->coinsCount; i++)
+		this->coins[i]->update(timeElapsed);
 	this->levelTime -= timeElapsed;
 	return false;
 }
 
-void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Renderer* renderer)
+void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Texture* coinTexture, SDL_Renderer* renderer)
 {
 	FILE* fileStream = fopen(this->fileName, "r");
 	point p, q;
 	char buff[BUFF_SIZE];
 	char* data[LEVEL_LINES];
-	int tileIterator = 0, enemyIterator = 0;
+	int tileIterator = 0, enemyIterator = 0, coinIterator = 0;
 
 	if (fileStream != NULL)
 	{
@@ -91,30 +96,35 @@ void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Render
 				if (data[y][x] == 'g' || data[y][x] == 'G' || data[y][x] == 'c' || data[y][x] == 'C'
 					|| data[y][x] == 'p' || data[y][x] == 'P')
 					this->tilesCount++;
+				if (data[y][x] == 'c' || data[y][x] == 'C')
+					this->coinsCount++;
 				else if (data[y][x] != 's' && data[y][x] != 'S' && data[y][x] != 'm' && data[y][x] != 'M'
 					&& ((data[y][x] >= 'a' && data[y][x] <= 'z') || (data[y][x] >= 'A' && data[y][x] <= 'Z')))
 					this->enemiesCount++;
 			}
 		this->tiles = new tile*[this->tilesCount];
 		this->enemies = new enemy*[this->enemiesCount/2];
+		this->coins = new coin*[this->coinsCount];
 		for (int y = 0; y < LEVEL_LINES; y++)
 			for (int x = 0; x < this->levelWidth; x++)
 			{
 				p = {(double)x * (double)tileWidth, (double)y * (double)tileHeight};
 				if (data[y][x] == 'g' || data[y][x] == 'G')
 				{
-					tiles[tileIterator] = new tile(tileTexture, groundTile, tileTextureWidth, tileTextureWidth, p, renderer);
+					tiles[tileIterator] = new tile(tileTexture, groundTile, tileTextureWidth, tileTextureHeight, p, renderer);
 					tileIterator++;
 				}
 				else if (data[y][x] == 'p' || data[y][x] == 'P')
 				{
-					tiles[tileIterator] = new tile(tileTexture, platformTile, tileTextureWidth, tileTextureWidth, p, renderer);
+					tiles[tileIterator] = new tile(tileTexture, platformTile, tileTextureWidth, tileTextureHeight, p, renderer);
 					tileIterator++;
 				}
 				else if (data[y][x] == 'c' || data[y][x] == 'C')
 				{
-					tiles[tileIterator] = new tile(tileTexture, coinTile, tileTextureWidth, tileTextureWidth, p, renderer);
+					tiles[tileIterator] = new tile(tileTexture, coinTile, tileTextureWidth, tileTextureHeight, p, renderer);
 					tileIterator++;
+					coins[coinIterator] = new coin(coinTexture, coinTextureWidth, coinTextureHeight, p, renderer);
+					coinIterator++;
 				}
 				else if (data[y][x] == 's' || data[y][x] == 'S')
 					this->startPosition = p;
@@ -152,3 +162,6 @@ void level::start()
 	this->levelTime = this->loadedLevelTime;
 	this->player->setPosition(this->startPosition);
 }
+
+int level::getWidth()
+{ return this->levelWidth; }

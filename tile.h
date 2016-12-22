@@ -29,7 +29,7 @@ class tile
 		tileType type;
 
 		tile(SDL_Texture* loadedTexture, tileType type, int textureWidth, int textureHeight, point position, SDL_Renderer* renderer);
-		void render(SDL_Renderer* renderer);
+		void render(SDL_Renderer* renderer, int x);
 		void disable();
 		bool isVisible();
 		int getWidth();

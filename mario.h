@@ -5,6 +5,7 @@
 #include "collision.h"
 #include "tile.h"
 #include "enemy.h"
+#include "coin.h"
 
 enum marioInfo
 {
@@ -51,10 +52,10 @@ class mario
 		void stop();
 		void stopFalling();
 		void update(double timeElapsed, collision type);
-		void render(SDL_Renderer* renderer);
+		void render(SDL_Renderer* renderer, int x);
 		point getPosition();
 		void setPosition(point p);
-		collision checkCollisions(tile** tiles, int count);
+		collision checkCollisions(tile** tiles, int count, coin** coins, int coinCount);
 		bool checkCollisions(enemy** enemies, int count);
 		int getWidth();
 		int getHeight();

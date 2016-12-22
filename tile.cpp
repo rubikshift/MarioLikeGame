@@ -13,23 +13,23 @@ tile::tile(SDL_Texture* loadedTexture, tileType type, int textureWidth, int text
 	this->rect.w = textureWidth;
 }
 
-void tile::render(SDL_Renderer* renderer)
+void tile::render(SDL_Renderer* renderer, int x)
 {
-	if (!visible)
+	if (!(this->visible))
 		return;
 	SDL_Rect sprite;
-	sprite.x = this->position.x;
+	sprite.x = this->position.x - x;
 	sprite.y = this->position.y;
-	sprite.w = this->rect.w * 2;
-	sprite.h = this->rect.h * 2;
+	sprite.w = (int)tileWidth;
+	sprite.h = (int)tileHeight;
 	SDL_RenderCopy(renderer, this->texture, &(this->rect), &sprite);
 }
 
 int tile::getWidth()
-{ return this->rect.w*2; }
+{ return (int)tileWidth; }
 
 int tile::getHeight()
-{ return this->rect.h*2; }
+{ return (int)tileHeight; }
 
 point tile::getPosition()
 { return this->position; }

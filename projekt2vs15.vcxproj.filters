@@ -13,6 +13,9 @@
     <Image Include="tiles.bmp">
       <Filter>resources</Filter>
     </Image>
+    <Image Include="coin.bmp">
+      <Filter>resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -44,15 +47,13 @@
     <ClCompile Include="basicSDLFunctions.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="game.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="level.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="levelList.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="coin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sdl.h">
@@ -79,14 +80,17 @@
     <ClInclude Include="collision.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="level.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="levelList.h">
       <Filter>headers</Filter>
     </ClInclude>
+    <ClInclude Include="coin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="level1.txt">
+      <Filter>resources</Filter>
+    </Text>
   </ItemGroup>
 </Project>
