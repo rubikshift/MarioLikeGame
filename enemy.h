@@ -26,13 +26,15 @@ class enemy
 		int actualFrame;
 		SDL_Rect animationFrames[enemyAnimationFramesCount];
 		SDL_Texture* spriteSheet;
-		velocity actualVelocity;
 
 	public:
+		velocity actualVelocity;
+
 		enemy(SDL_Texture* loadedSprite, int spriteWidth, int spriteHeight, point start, point end, SDL_Renderer* renderer);
 		void update(double timeElapsed);
 		void render(SDL_Renderer* renderer, int x);
 		point getPosition();
+		void setPosition(point p);
 		int getWidth();
 		int getHeight();
 };

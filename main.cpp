@@ -5,6 +5,42 @@
 #include "level.h"
 #include "levelList.h"
 
+const char* saveFile = "save.txt";
+
+void saveGame(mario* player, level* gameLevel, int actualLevel)
+{
+	int isJumping = player->isJumping;
+	FILE* fileStream = fopen(saveFile, "wb");
+	int buffInt[] = {actualLevel, player->lives, player->coins, isJumping};
+	double buffDouble[] = {player->startHeight, player->actualHeight, player->getPosition().x, player->getPosition().y};
+	fwrite(buffInt, sizeof(int), sizeof(buffInt)/sizeof(int), fileStream);
+	fwrite(buffDouble, sizeof(double), sizeof(buffDouble) / sizeof(double), fileStream);
+	gameLevel->saveToFile(fileStream);
+	fclose(fileStream);
+}
+void loadGame(mario* player, level** gameLevels, int &actualLevel)
+{
+	int isJumping;
+	double x, y;
+	FILE* fileStream = fopen(saveFile, "rb");
+	if (fileStream == NULL)
+		return;
+	fread(&actualLevel, sizeof(actualLevel), 1, fileStream);
+	fread(&player->lives, sizeof(player->lives), 1, fileStream);
+	fread(&player->coins, sizeof(player->coins), 1, fileStream);
+	fread(&isJumping, sizeof(isJumping), 1, fileStream);
+	fread(&player->startHeight, sizeof(player->startHeight), 1, fileStream);
+	fread(&player->actualHeight, sizeof(player->actualHeight), 1, fileStream);
+	fread(&x, sizeof(x), 1, fileStream);
+	fread(&y, sizeof(y), 1, fileStream);
+	gameLevels[actualLevel]->loadFromFile(fileStream);
+	if (isJumping == 0)
+		player->isJumping = false;
+	else
+		player->isJumping = true;
+	player->setPosition({x, y});
+	fclose(fileStream);
+}
 
 void centerCamera(SDL_Rect* camera, int levelWidth, int x)
 {
@@ -154,8 +190,8 @@ int main(int argc, char **argv)
 							actualLevel = 0; 
 							reload = true;
 							break;
-						case SDLK_s: break;
-						case SDLK_l: break;
+						case SDLK_s: saveGame(player, gameLevels[actualLevel], actualLevel); break;
+						case SDLK_l: loadGame(player, gameLevels, actualLevel); break;
 					}
 					break;
 				case SDL_KEYUP:
@@ -176,7 +212,10 @@ int main(int argc, char **argv)
 	SDL_DestroyTexture(marioTexture);
 	SDL_DestroyTexture(enemyTexture);
 	SDL_DestroyTexture(tileTexture);
-
+	delete player;
+	for (int i = 0; i < levels.size; i++)
+		delete gameLevels[i];
+	delete[] gameLevels;
 	SDL_Quit();
 	return 0;
 };

@@ -67,12 +67,11 @@ void mario::stop()
 
 void mario::update(double timeElapsed, collision collisionType)
 {	
-	static int startHeight, actualHeight;
-	if (isJumping)
-		actualHeight = this->position.y;
+	if (this->isJumping)
+		this->actualHeight = this->position.y;
 	else
-		startHeight = this->position.y;
-	if ((isJumping && (startHeight - actualHeight) >= (int)maxJumpHeight) || !isJumping && collisionType == none)
+		this->startHeight = this->position.y;
+	if ((this->isJumping && (this->startHeight - this->actualHeight) >= (double)maxJumpDistance) || !this->isJumping && collisionType == none)
 		this->fall();
 	if (collisionType == groundCollision)
 		this->stopFalling();

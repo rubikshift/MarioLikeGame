@@ -35,5 +35,7 @@ class level
 		bool isFinished();
 		void start();
 		int getWidth();
+		void saveToFile(FILE* fileStream);
+		void loadFromFile(FILE* fileStream);
 
 };

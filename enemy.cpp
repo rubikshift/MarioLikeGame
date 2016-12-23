@@ -49,3 +49,6 @@ int enemy::getWidth()
 
 int enemy::getHeight()
 { return (int)enemyHeight; }
+
+void enemy::setPosition(point p)
+{ this->position = p; }

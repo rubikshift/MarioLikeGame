@@ -18,7 +18,7 @@ enum marioInfo
 	moveLeftEndFrame = 7,
 	jumpLeftFrame = 9,
 	jumpRightFrame = 8,
-	maxJumpHeight = 100 //pixels
+	maxJumpDistance = 100 //pixels
 };
 
 enum marioDefaultSize
@@ -34,8 +34,6 @@ class mario
 	private:
 		
 		int actualFrame;
-		bool isJumping;
-		bool isFalling;
 		SDL_Rect animationFrames[animationFramesCount];
 		SDL_Texture* spriteSheet;
 		velocity characterVelocity;
@@ -43,6 +41,9 @@ class mario
 	public:
 		int lives;
 		int coins;
+		bool isJumping;
+		bool isFalling;
+		double startHeight, actualHeight;
 
 		mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, SDL_Renderer* renderer);
 		void moveRight();

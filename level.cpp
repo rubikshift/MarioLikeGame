@@ -161,7 +161,43 @@ void level::start()
 { 
 	this->levelTime = this->loadedLevelTime;
 	this->player->setPosition(this->startPosition);
+	this->player->isJumping = false;
 }
 
 int level::getWidth()
 { return this->levelWidth; }
+
+void level::saveToFile(FILE* fileStream)
+{
+	fwrite(&this->levelTime, sizeof(levelTime), 1, fileStream);
+	double x;
+	for (int i = 0; i < enemiesCount; i++)
+	{
+		x = this->enemies[i]->getPosition().x;
+		fwrite(&x, sizeof(x), 1, fileStream);
+		fwrite(&this->enemies[i]->actualVelocity.x, sizeof(this->enemies[i]->actualVelocity.x), 1, fileStream);
+	}
+	for (int i = 0; i < this->tilesCount; i++)
+		if (this->tiles[i]->isVisible() != true)
+			fwrite(&i, sizeof(i), 1, fileStream);
+}
+
+void level::loadFromFile(FILE* fileStream)
+{
+	fread(&this->levelTime, sizeof(levelTime), 1, fileStream);
+	int q;
+	point p;
+	for (int i = 0; i < enemiesCount; i++)
+	{
+		p = this->enemies[i]->getPosition();
+		fread(&p.x, sizeof(p.x), 1, fileStream);
+		fread(&this->enemies[i]->actualVelocity.x, sizeof(this->enemies[i]->actualVelocity.x), 1, fileStream);
+		this->enemies[i]->setPosition(p);
+	}
+	while (feof(fileStream) == 0)
+	{
+		fread(&q, sizeof(q), 1, fileStream);
+		if(q < tilesCount && q >= 0)
+			tiles[q]->disable();
+	}
+}
