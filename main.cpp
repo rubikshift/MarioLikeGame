@@ -5,7 +5,7 @@
 #include "level.h"
 #include "levelList.h"
 
-const char* saveFile = "save.txt";
+const char* saveFile = "save.sav";
 
 void saveGame(mario* player, level* gameLevel, int actualLevel)
 {
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 {
 	int t1, t2, rc, actualLevel = 0;
 	bool quit  = false, reload = false;
-	double delta, worldTime;
+	double delta;
 	levelList levels;
 	SDL_Event event;
 	SDL_Surface *screen, *charset;
@@ -77,8 +77,8 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	
-//	rc = SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer);
-	rc = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
+	rc = SDL_CreateWindowAndRenderer(0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP, &window, &renderer);
+//	rc = SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &window, &renderer);
 	if(rc != 0) 
 	{
 		SDL_Quit();
@@ -116,16 +116,14 @@ int main(int argc, char **argv)
 	int black = SDL_MapRGB(screen->format, 0, 0, 0);
 	int skyBlue = SDL_MapRGB(screen->format, 119, 181, 254);
 
-	marioTexture = loadTexture("spritesheet.bmp", renderer);
-	enemyTexture = loadTexture("eti.bmp", renderer);
-	tileTexture = loadTexture("tiles.bmp", renderer);
-	coinTexture = loadTexture("coin.bmp", renderer);
+	marioTexture = loadTexture("spritesheet.bmp", renderer, skyBlue);
+	enemyTexture = loadTexture("enemy.bmp", renderer, skyBlue);
+	tileTexture = loadTexture("tiles.bmp", renderer, skyBlue);
+	coinTexture = loadTexture("coin.bmp", renderer, skyBlue);
 
 	mario* player = new mario(marioTexture, 16, 16, renderer);
 	level** gameLevels = new level*[levels.size];
-	for (int i = 0; i < levels.size; i++)
-		gameLevels[i] = new level(levels[i], player, tileTexture, enemyTexture, coinTexture, renderer);
-
+	gameLevels[actualLevel] = new level(levels[actualLevel], player, tileTexture, enemyTexture, coinTexture, renderer);
 	gameLevels[actualLevel]->start();
 	t1 = SDL_GetTicks();
 	while(!quit)
@@ -146,7 +144,8 @@ int main(int argc, char **argv)
 		if (gameLevels[actualLevel]->isFinished() && actualLevel < levels.size - 1)
 		{
 			actualLevel++;
-			gameLevels[actualLevel]->start();
+			reload = true;
+			continue;
 		}
 		else if ((gameLevels[actualLevel]->isFinished() && actualLevel == levels.size - 1) || player->lives == 0)
 		{
@@ -207,15 +206,11 @@ int main(int argc, char **argv)
 	SDL_FreeSurface(charset);
 	SDL_FreeSurface(screen);
 	SDL_DestroyTexture(scrtex);
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
 	SDL_DestroyTexture(marioTexture);
 	SDL_DestroyTexture(enemyTexture);
 	SDL_DestroyTexture(tileTexture);
+	SDL_DestroyWindow(window);
 	delete player;
-	for (int i = 0; i < levels.size; i++)
-		delete gameLevels[i];
-	delete[] gameLevels;
 	SDL_Quit();
 	return 0;
 };

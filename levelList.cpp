@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "levelList.h"
-#define BUFF_SIZE 20
+#define BUFF_SIZE 64
 
 levelList::levelList()
 {
@@ -25,7 +25,10 @@ levelList::levelList()
 
 		fileStream = fopen(buff, "r");
 		if (fileStream != NULL)
+		{
 			counter++;
+			fclose(fileStream);
+		}
 		else
 			toStop = true;
 	} while (!toStop);

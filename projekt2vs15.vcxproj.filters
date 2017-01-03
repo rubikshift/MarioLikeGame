@@ -16,6 +16,9 @@
     <Image Include="coin.bmp">
       <Filter>resources</Filter>
     </Image>
+    <Image Include="enemy.bmp">
+      <Filter>resources</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="source">
@@ -90,6 +93,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="level1.txt">
+      <Filter>resources</Filter>
+    </Text>
+    <Text Include="level2.txt">
+      <Filter>resources</Filter>
+    </Text>
+    <Text Include="level3.txt">
       <Filter>resources</Filter>
     </Text>
   </ItemGroup>

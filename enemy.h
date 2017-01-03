@@ -5,14 +5,14 @@
 
 enum enemyInfo
 {
-	enemyAnimationFramesCount = 2,
+	enemyAnimationFramesCount = 3,
 	enemyMoveSpeed = 60 //pixels per second
 };
 
 enum enemyDefaultSize
 {
-	enemySpriteWidth = 32, //pixels
-	enemySpriteHeight = 32, //pixels
+	enemySpriteWidth = 16, //pixels
+	enemySpriteHeight = 16, //pixels
 	enemyWidth = 32, //pixels
 	enemyHeight = 32 //pixels
 };

@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "level.h"
-#define BUFF_SIZE 8
+#define BUFF_SIZE 64
 #define LEVEL_LINES 15
 #define SECOND 1
 #define MINUTE 60
@@ -141,9 +141,10 @@ void level::load(SDL_Texture* tileTexture, SDL_Texture* enemyTexture, SDL_Textur
 						}
 				}
 			}
+		fclose(fileStream);
 	}
 	enemiesCount = enemyIterator;
-	fclose(fileStream);
+	
 }
 
 double level::getTime()

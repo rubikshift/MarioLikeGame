@@ -21,7 +21,7 @@ mario::mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, 
 void mario::moveRight()
 {
 	this->characterVelocity.x = (double)moveSpeed;
-	if (this->isJumping)
+	if (this->isJumping || this->isFalling)
 		this->actualFrame = (int)jumpRightFrame;
 	else
 	{
@@ -35,7 +35,7 @@ void mario::moveRight()
 void mario::moveLeft()
 {
 	this->characterVelocity.x = (-1) * (double)moveSpeed;
-	if (this->isJumping)
+	if (this->isJumping || this->isFalling)
 		this->actualFrame = (int)jumpLeftFrame;
 	else
 	{

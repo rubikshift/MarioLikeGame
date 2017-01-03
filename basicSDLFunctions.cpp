@@ -73,9 +73,10 @@ void drawRectangle(SDL_Surface *screen, int x, int y, int l, int k,
 		drawLine(screen, x + 1, i, l - 2, 1, 0, fillColor);
 };
 
-SDL_Texture* loadTexture(char* filename, SDL_Renderer* renderer)
+SDL_Texture* loadTexture(char* filename, SDL_Renderer* renderer, int colorKey)
 {
 	SDL_Surface* surface = SDL_LoadBMP(filename);
+	SDL_SetColorKey(surface, true, colorKey);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
 	return texture;

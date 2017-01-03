@@ -11,7 +11,7 @@ enum marioInfo
 {
 	animationFramesCount = 10,
 	numberOfLives = 3,
-	moveSpeed = 80, //pixel per second
+	moveSpeed = 90, //pixel per second
 	moveRightStartFrame = 0,
 	moveRightEndFrame = 3,
 	moveLeftStartFrame = 4,

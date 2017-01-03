@@ -107,6 +107,7 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Image>
+    <Image Include="enemy.bmp" />
     <Image Include="eti.bmp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
@@ -131,6 +132,8 @@ copy /y "$(ProjectDir)*.bmp" $(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <Text Include="level1.txt" />
+    <Text Include="level2.txt" />
+    <Text Include="level3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
