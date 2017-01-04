@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Image Include="eti.bmp">
-      <Filter>resources</Filter>
-    </Image>
     <Image Include="cs8x8.bmp">
       <Filter>resources</Filter>
     </Image>
@@ -56,7 +53,9 @@
     <ClCompile Include="levelList.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="coin.cpp" />
+    <ClCompile Include="coin.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sdl.h">
@@ -89,7 +88,9 @@
     <ClInclude Include="levelList.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="coin.h" />
+    <ClInclude Include="coin.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="level1.txt">

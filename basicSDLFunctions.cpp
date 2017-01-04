@@ -11,7 +11,8 @@ void drawString(SDL_Surface *screen, int x, int y, const char *text,
 	s.h = 8;
 	d.w = 8;
 	d.h = 8;
-	while (*text) {
+	while (*text) 
+	{
 		c = *text & 255;
 		px = (c % 16) * 8;
 		py = (c / 16) * 8;
@@ -22,8 +23,8 @@ void drawString(SDL_Surface *screen, int x, int y, const char *text,
 		SDL_BlitSurface(charset, &s, screen, &d);
 		x += 8;
 		text++;
-	};
-};
+	}
+}
 
 
 // narysowanie na ekranie screen powierzchni sprite w punkcie (x, y)
@@ -36,7 +37,7 @@ void drawSurface(SDL_Surface *screen, SDL_Surface *sprite, int x, int y)
 	dest.w = sprite->w;
 	dest.h = sprite->h;
 	SDL_BlitSurface(sprite, NULL, screen, &dest);
-};
+}
 
 
 // rysowanie pojedynczego pixela
@@ -45,19 +46,20 @@ void drawPixel(SDL_Surface *surface, int x, int y, Uint32 color)
 	int bpp = surface->format->BytesPerPixel;
 	Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
 	*(Uint32 *)p = color;
-};
+}
 
 
 // rysowanie linii o d≥ugoúci l w pionie (gdy dx = 0, dy = 1) 
 // bπdü poziomie (gdy dx = 1, dy = 0)
 void drawLine(SDL_Surface *screen, int x, int y, int l, int dx, int dy, Uint32 color)
 {
-	for (int i = 0; i < l; i++) {
+	for (int i = 0; i < l; i++) 
+	{
 		drawPixel(screen, x, y, color);
 		x += dx;
 		y += dy;
-	};
-};
+	}
+}
 
 
 // rysowanie prostokπta o d≥ugoúci bokÛw l i k
@@ -71,7 +73,7 @@ void drawRectangle(SDL_Surface *screen, int x, int y, int l, int k,
 	drawLine(screen, x, y + k - 1, l, 1, 0, outlineColor);
 	for (i = y + 1; i < y + k - 1; i++)
 		drawLine(screen, x + 1, i, l - 2, 1, 0, fillColor);
-};
+}
 
 SDL_Texture* loadTexture(char* filename, SDL_Renderer* renderer, int colorKey)
 {

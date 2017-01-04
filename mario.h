@@ -25,7 +25,7 @@ enum marioDefaultSize
 {
 	marioSpriteWidth = 16, //pixels
 	marioSpriteHeight = 16, //pixels
-	marioWidth = 32, //pixels
+	marioWidth = 27, //pixels
 	marioHeight = 32 //pixels
 };
 
@@ -58,6 +58,6 @@ class mario
 		void setPosition(point p);
 		collision checkCollisions(tile** tiles, int count, coin** coins, int coinCount);
 		bool checkCollisions(enemy** enemies, int count);
-		int getWidth();
-		int getHeight();
+		double getWidth();
+		double getHeight();
 };

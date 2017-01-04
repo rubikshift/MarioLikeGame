@@ -5,6 +5,8 @@ mario::mario(SDL_Texture* loadedSpriteSheet, int spriteWidth, int spriteHeight, 
 {
 	this->coins = 0;
 	this->lives = (int)numberOfLives;
+	this->characterVelocity.y = 0;
+	this->characterVelocity.x = 0;
 	this->isJumping = false;
 	this->isFalling = false;
 	this->actualFrame = 0;
@@ -50,14 +52,14 @@ void mario::stop()
 {
 	if (this->characterVelocity.x > 0)
 	{
-		if (this->isJumping)
+		if (this->isJumping || this->isFalling)
 			this->actualFrame = (int)jumpRightFrame;
 		else
 			this->actualFrame = (int)moveRightStartFrame;
 	}
 	else if (this->characterVelocity.x < 0)
 	{
-		if(this->isJumping)
+		if(this->isJumping || this->isFalling)
 			this->actualFrame = (int)jumpLeftFrame;
 		else
 			this->actualFrame = (int)moveLeftStartFrame;
@@ -191,11 +193,11 @@ collision mario::checkCollisions(tile** tiles, int count, coin** coins, int coin
 	return none;
 }
 
-int mario::getWidth()
-{ return (int)marioWidth; }
+double mario::getWidth()
+{ return (double)marioWidth; }
 
-int mario::getHeight()
-{ return (int)marioHeight; }
+double mario::getHeight()
+{ return (double)marioHeight; }
 
 void mario::setPosition(point p)
 { this->position = p; }

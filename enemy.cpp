@@ -44,11 +44,11 @@ void enemy::render(SDL_Renderer* renderer, int x)
 point enemy::getPosition()
 { return this->position; }
 
-int enemy::getWidth()
-{ return (int)enemyWidth; }
+double enemy::getWidth()
+{ return (double)enemyWidth; }
 
-int enemy::getHeight()
-{ return (int)enemyHeight; }
+double enemy::getHeight()
+{ return (double)enemyHeight; }
 
 void enemy::setPosition(point p)
 { this->position = p; }

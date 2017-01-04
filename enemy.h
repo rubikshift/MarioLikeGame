@@ -35,6 +35,6 @@ class enemy
 		void render(SDL_Renderer* renderer, int x);
 		point getPosition();
 		void setPosition(point p);
-		int getWidth();
-		int getHeight();
+		double getWidth();
+		double getHeight();
 };

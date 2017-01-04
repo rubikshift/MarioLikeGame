@@ -32,7 +32,7 @@ class tile
 		void render(SDL_Renderer* renderer, int x);
 		void disable();
 		bool isVisible();
-		int getWidth();
-		int getHeight();
+		double getWidth();
+		double getHeight();
 		point getPosition();
 };

@@ -5,7 +5,7 @@
 enum coinInfo
 {
 	coinMaxPopHeight = 50, //pixels
-	coinSpeed = 95 // pixels per second
+	coinSpeed = 110 // pixels per second
 };
 enum coinDefaultSize
 {
